@@ -2,6 +2,7 @@ services:
   plugin.manager.commerce_tax_service:
     class: Drupal\commerce_tax_service\TaxServiceManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@entity_type.manager']
+
   plugin.manager.commerce_tax_service_condition:
     class: Drupal\commerce_tax_service\TaxServiceConditionManager
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler', '@entity_type.manager']
@@ -11,3 +12,8 @@ services:
     arguments: ['@entity_type.manager']
     tags:
       - { name: commerce_order.order_processor, priority: 50 }
+
+  commerce_tax_service.tax_service_subscriber:
+    class: Drupal\commerce_tax_service\EventSubscriber\TaxServiceSubscriber
+    tags:
+      - {name: event_subscriber}

@@ -24,7 +24,6 @@ class BillingState extends TaxServiceConditionBase {
   public function defaultConfiguration() {
     return [
         'states' => [],
-        'negate' => FALSE,
       ] + parent::defaultConfiguration();
   }
 
@@ -54,13 +53,6 @@ class BillingState extends TaxServiceConditionBase {
       '#default_value' => $this->configuration['states'],
     ];
 
-    $form['negate'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Negate'),
-      '#description' => $this->t('Check this box to apply the tax service only to the unselected states in the above list.'),
-      '#default_value' => $this->configuration['negate'],
-    ];
-
     return $form;
   }
 
@@ -69,10 +61,9 @@ class BillingState extends TaxServiceConditionBase {
    */
   public function evaluate() {
     $states = $this->configuration['states'];
-    $negate = $this->configuration['negate'];
 
     if (empty($states)) {
-      return ($negate);
+      return FALSE;
     }
 
 

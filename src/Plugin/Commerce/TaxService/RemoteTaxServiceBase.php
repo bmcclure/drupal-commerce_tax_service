@@ -4,13 +4,14 @@ namespace Drupal\commerce_tax_service\Plugin\Commerce\TaxService;
 
 use Drupal\Core\Form\FormStateInterface;
 
-abstract class SimpleBase extends TaxServiceBase implements SimpleTaxServiceInterface {
+class RemoteTaxServiceBase extends TaxServiceBase implements RemoteTaxServiceInterface {
+
   /**
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
     return [
-        'amount' => 0,
+        'mode' => 'test',
       ] + parent::defaultConfiguration();
   }
 
@@ -20,16 +21,15 @@ abstract class SimpleBase extends TaxServiceBase implements SimpleTaxServiceInte
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form += parent::buildConfigurationForm($form, $form_state);
 
-    $form['amount'] = [
-      '#type' => 'commerce_number',
-      '#title' => $this->t('Percentage'),
-      '#default_value' => $this->configuration['amount'] * 100,
-      '#maxlength' => 255,
+    $form['mode'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Mode'),
+      '#default_value' => $this->configuration['mode'],
       '#required' => TRUE,
-      '#min' => 0,
-      '#max' => 100,
-      '#size' => 4,
-      '#field_suffix' => t('%'),
+      '#options' => [
+        'test' => $this->t('Test'),
+        'live' => $this->t('Live'),
+      ],
     ];
 
     return $form;
@@ -41,8 +41,8 @@ abstract class SimpleBase extends TaxServiceBase implements SimpleTaxServiceInte
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValue($form['#parents']);
 
-    if (empty($values['target_plugin_configuration']['amount'])) {
-      $form_state->setError($form, $this->t('Percentage amount cannot be empty.'));
+    if (empty($values['target_plugin_configuration']['mode'])) {
+      $form_state->setError($form, $this->t('A value for Mode must be set.'));
     }
   }
 
@@ -52,15 +52,12 @@ abstract class SimpleBase extends TaxServiceBase implements SimpleTaxServiceInte
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValue($form['#parents']);
 
-    $this->configuration['amount'] = (string) ($values['amount'] / 100);
+    $this->configuration['mode'] = $values['mode'];
 
     parent::submitConfigurationForm($form, $form_state);
   }
 
-  /**
-   * @inheritdoc
-   */
-  public function getAmount() {
-    return (string) $this->configuration['amount'];
+  public function getMode() {
+    return $this->configuration['mode'];
   }
 }

@@ -1,5 +1,5 @@
 entity.commerce_tax_service.collection:
-  title: 'Tax Services'
+  title: 'Tax services'
   route_name: 'entity.commerce_tax_service.collection'
   parent: 'commerce.configuration'
   description: 'Manage your tax services.'

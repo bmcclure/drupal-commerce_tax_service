@@ -26,7 +26,6 @@ class TaxServiceStorage extends CommerceContentEntityStorage implements TaxServi
     return $this->getQuery()
       ->condition('stores', [$store->id()], 'IN')
       ->condition('order_types', [$order_type->id()], 'IN')
-      ->condition('start_date', gmdate('Y-m-d'), '<=')
       ->condition('status', TRUE);
   }
 
