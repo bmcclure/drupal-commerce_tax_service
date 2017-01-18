@@ -16,7 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   target_entity_type = "commerce_order",
  * )
  */
-class BillingState extends TaxServiceConditionBase {
+class OrderBillingState extends TaxServiceConditionBase {
 
   /**
    * {@inheritdoc}
@@ -31,11 +31,9 @@ class BillingState extends TaxServiceConditionBase {
     /** @var SubdivisionRepository $subdivisionRepository */
     $subdivisionRepository = \Drupal::service('address.subdivision_repository');
 
-    $list = $subdivisionRepository->getList([]);
+    $list = $subdivisionRepository->getList(['US'], 'en-US');
 
-    dpm($list);
-
-    return [];
+    return $list;
   }
 
   /**
@@ -70,7 +68,9 @@ class BillingState extends TaxServiceConditionBase {
     /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
     $order = $this->getTargetEntity();
 
-    if (!$order->getBillingProfile()->hasField('address') || $order->getBillingProfile()->get('address')->isEmpty()) {
+    $billingProfile = $order->getBillingProfile();
+
+    if (is_null($billingProfile) || !$billingProfile->hasField('address') || $billingProfile->get('address')->isEmpty()) {
       return FALSE;
     }
 
@@ -78,8 +78,6 @@ class BillingState extends TaxServiceConditionBase {
     $address = $order->getBillingProfile()->get('address')->first();
 
     $state = $address->getAdministrativeArea();
-
-    dpm($state);
 
     return in_array($state, $states);
   }

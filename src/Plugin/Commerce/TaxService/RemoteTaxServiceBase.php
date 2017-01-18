@@ -4,7 +4,7 @@ namespace Drupal\commerce_tax_service\Plugin\Commerce\TaxService;
 
 use Drupal\Core\Form\FormStateInterface;
 
-class RemoteTaxServiceBase extends TaxServiceBase implements RemoteTaxServiceInterface {
+abstract class RemoteTaxServiceBase extends TaxServiceBase implements RemoteTaxServiceInterface {
 
   /**
    * {@inheritdoc}
