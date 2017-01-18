@@ -1,0 +1,4 @@
+tax_service:
+  label: Sales Tax
+  has_ui: true
+  weight: 0

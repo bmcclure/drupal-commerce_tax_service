@@ -1,0 +1,5 @@
+entity.commerce_tax_service.add_form:
+  route_name: entity.commerce_tax_service.add_form
+  title: 'Add a new tax service'
+  appears_on:
+    - entity.commerce_tax_service.collection

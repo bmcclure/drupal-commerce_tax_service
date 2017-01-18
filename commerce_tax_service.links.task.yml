@@ -1,0 +1,9 @@
+entity.commerce_tax_service.collection:
+  route_name: entity.commerce_tax_service.collection
+  base_route: entity.commerce_tax_service.collection
+  title: List
+
+entity.commerce_tax_service.edit_form:
+  route_name: entity.commerce_tax_service.edit_form
+  base_route: entity.commerce_tax_service.edit_form
+  title: Edit

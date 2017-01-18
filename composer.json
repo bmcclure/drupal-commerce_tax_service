@@ -1,0 +1,8 @@
+{
+  "name": "drupal/commerce_tax_service",
+  "type": "drupal-module",
+  "description": "Commerce Tax Service",
+  "homepage": "https://github.com/TopFloorTech/drupal-commerce_tax_service",
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev"
+}

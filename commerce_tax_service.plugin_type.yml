@@ -1,0 +1,11 @@
+commerce_tax_service.tax_service:
+  label: Commerce tax service
+  provider: commerce_tax_service
+  plugin_manager_service_id: plugin.manager.commerce_tax_service
+  plugin_definition_decorator_class: Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator
+
+commerce_tax_service.tax_service_condition:
+  label: Commerce tax service condition
+  provider: commerce_tax_service
+  plugin_manager_service_id: plugin.manager.commerce_tax_service_condition
+  plugin_definition_decorator_class: Drupal\plugin\PluginDefinition\ArrayPluginDefinitionDecorator

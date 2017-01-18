@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * Template for the tax service add/edit form.
+ *
+ * Available variables:
+ * - form: The form.
+ *
+ * @ingroup themeable
+ */
+#}
+<div class="layout-tax-service-form clearfix">
+  <div class="layout-region layout-region-tax-service-main">
+    {{ form|without('actions') }}
+  </div>
+  <div class="layout-region layout-region-tax-service-footer">
+    {{ form.actions }}
+  </div>
+</div>

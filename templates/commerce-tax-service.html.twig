@@ -1,0 +1,24 @@
+{#
+/**
+ * @file
+ *
+ * Default template for tax services.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapper.
+ * - tax_service: The rendered tax service fields.
+ *   Use 'tax_service' to print them all, or print a subset such as
+ *   'tax_service.name'. Use the following code to exclude the
+ *   printing of a given field:
+ *   @code
+ *   {{ tax_service|without('name') }}
+ *   @endcode
+ * - tax_service_entity: The tax service entity.
+ * - tax_service_url: The tax service URL.
+ *
+ * @ingroup themeable
+ */
+#}
+<article{{ attributes }}>
+  {{ tax_service }}
+</article>

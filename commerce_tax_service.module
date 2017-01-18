@@ -1,0 +1,52 @@
+<?php
+
+/**
+ * @file
+ * Provides a UI for managing tax services.
+ */
+
+use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_tax_service_theme() {
+  return [
+    'commerce_tax_service' => [
+      'render element' => 'elements',
+    ],
+    'commerce_tax_service_form' => [
+      'render element' => 'form',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_commerce_tax_service().
+ */
+function commerce_tax_service_theme_suggestions_commerce_tax_service(array $variables) {
+  return _commerce_entity_theme_suggestions('commerce_tax_service', $variables);
+}
+
+/**
+ * Prepares variables for tax service templates.
+ *
+ * Default template: commerce-tax-service.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing rendered fields.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_commerce_tax_service(array &$variables) {
+  /** @var Drupal\commerce_tax_service\Entity\TaxServiceInterface $taxService */
+  $taxService = $variables['elements']['#commerce_tax_service'];
+
+  $variables['tax_service_entity'] = $taxService;
+  $variables['tax_service_url'] = $taxService->toUrl();
+  $variables['tax_service'] = [];
+
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['tax_service'][$key] = $variables['elements'][$key];
+  }
+}

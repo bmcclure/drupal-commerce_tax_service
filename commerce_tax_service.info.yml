@@ -1,0 +1,10 @@
+name: Commerce Tax Service
+type: module
+description: 'A plugin system for Drupal Commerce to integrate tax service providers like AvaTax and TaxJar.'
+version: 8.x-1.x
+core: 8.x
+package: Commerce
+dependencies:
+  - inline_entity_form
+  - commerce
+  - commerce:commerce_order

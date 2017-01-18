@@ -1,0 +1,7 @@
+entity.commerce_tax_service.collection:
+  path: '/admin/commerce/config/tax-services'
+  defaults:
+    _entity_list: 'commerce_tax_service'
+    _title: 'Tax Services'
+  requirements:
+    _permission: 'administer commerce_tax_service'
