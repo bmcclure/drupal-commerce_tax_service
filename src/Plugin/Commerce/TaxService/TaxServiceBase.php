@@ -8,6 +8,7 @@ use Drupal\commerce_price\Price;
 use Drupal\commerce_price\RounderInterface;
 use Drupal\Core\Executable\ExecutablePluginBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -62,6 +63,57 @@ abstract class TaxServiceBase extends ExecutablePluginBase implements TaxService
   /**
    * {@inheritdoc}
    */
+  public function defaultConfiguration() {
+    return [
+      'display_name' => 'Sales tax',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $contexts = $form_state->getTemporaryValue('gathered_contexts') ?: [];
+    $form['context_mapping'] = $this->addContextAssignmentElement($this, $contexts);
+
+    $form['display_name'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Display name'),
+      '#description' => $this->t('The name to display on the order for this tax adjustment.'),
+      '#default_value' => $this->configuration['display_name'],
+      '#required' => TRUE,
+    ];
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValue($form['#parents']);
+
+    if (empty($values['target_plugin_configuration']['display_name'])) {
+      $form_state->setError($form, $this->t('A display name must be set.'));
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $values = $form_state->getValue($form['#parents']);
+
+    $this->configuration['display_name'] = $values['display_name'];
+  }
+
+  public function getDisplayName() {
+    return $this->configuration['display_name'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getTargetEntityType() {
     return $this->pluginDefinition['target_entity_type'];
   }
@@ -89,33 +141,7 @@ abstract class TaxServiceBase extends ExecutablePluginBase implements TaxService
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $contexts = $form_state->getTemporaryValue('gathered_contexts') ?: [];
-    $form['context_mapping'] = $this->addContextAssignmentElement($this, $contexts);
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {}
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {}
-
-  /**
-   * {@inheritdoc}
-   */
   public function calculateDependencies() {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function defaultConfiguration() {
     return [];
   }
 

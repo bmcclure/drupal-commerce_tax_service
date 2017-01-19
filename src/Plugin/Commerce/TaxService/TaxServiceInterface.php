@@ -35,6 +35,14 @@ interface TaxServiceInterface extends ConfigurablePluginInterface, ContainerFact
   public function getTargetEntity();
 
   /**
+   * Get the display name for the tax service line item.
+   *
+   * @return string
+   *   The display name.
+   */
+  public function getDisplayName();
+
+  /**
    * Applies the tax service's adjustment to an item.
    *
    * @param \Drupal\commerce_order\EntityAdjustableInterface $entity

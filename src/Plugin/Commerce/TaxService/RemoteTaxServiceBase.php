@@ -2,9 +2,45 @@
 
 namespace Drupal\commerce_tax_service\Plugin\Commerce\TaxService;
 
+use Drupal\commerce_price\RounderInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use GuzzleHttp\ClientInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class RemoteTaxServiceBase extends TaxServiceBase implements RemoteTaxServiceInterface {
+
+  /**
+   * The HTTP client.
+   *
+   * @var \GuzzleHttp\Client
+   */
+  protected $httpClient;
+
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RounderInterface $rounder, ClientInterface $client) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $rounder);
+
+    $this->httpClient = $client;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    /** @var RounderInterface $rounder */
+    $rounder = $container->get('commerce_price.rounder');
+
+    /** @var ClientInterface $client */
+    $client = $container->get('http_client');
+
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $rounder,
+      $client
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -24,6 +60,7 @@ abstract class RemoteTaxServiceBase extends TaxServiceBase implements RemoteTaxS
     $form['mode'] = [
       '#type' => 'radios',
       '#title' => $this->t('Mode'),
+      '#description' => $this->t('Choose whether to use Test or Live mode, if the selected service supports this.'),
       '#default_value' => $this->configuration['mode'],
       '#required' => TRUE,
       '#options' => [
