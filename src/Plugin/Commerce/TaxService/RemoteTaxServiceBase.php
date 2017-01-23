@@ -78,7 +78,7 @@ abstract class RemoteTaxServiceBase extends TaxServiceBase implements RemoteTaxS
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValue($form['#parents']);
 
-    if (empty($values['target_plugin_configuration']['mode'])) {
+    if (empty($values['mode'])) {
       $form_state->setError($form, $this->t('A value for Mode must be set.'));
     }
   }
