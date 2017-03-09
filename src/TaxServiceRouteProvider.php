@@ -14,7 +14,7 @@ class TaxServiceRouteProvider extends AdminHtmlRouteProvider {
    * {@inheritdoc}
    */
   protected function getCanonicalRoute(EntityTypeInterface $entity_type) {
-    // Tax services use the edit-form route as the canonical route.
+    // Use the edit-form route as the canonical route.
     // @todo Remove this when #2479377 gets fixed.
     return $this->getEditFormRoute($entity_type);
   }

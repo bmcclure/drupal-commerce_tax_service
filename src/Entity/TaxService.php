@@ -236,7 +236,7 @@ class TaxService extends ContentEntityBase implements TaxServiceInterface {
       ->setSetting('handler', 'default')
       ->setTranslatable(TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'commerce_entity_select',
+        'type' => 'entity_reference_select',
         'weight' => 2,
       ]);
 
@@ -249,7 +249,7 @@ class TaxService extends ContentEntityBase implements TaxServiceInterface {
       ->setSetting('handler', 'default')
       ->setTranslatable(TRUE)
       ->setDisplayOptions('form', [
-        'type' => 'commerce_entity_select',
+        'type' => 'entity_reference_select',
         'weight' => 2,
       ]);
 
