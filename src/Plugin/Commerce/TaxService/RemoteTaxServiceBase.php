@@ -3,9 +3,9 @@
 namespace Drupal\commerce_tax_service\Plugin\Commerce\TaxService;
 
 use Drupal\commerce_price\RounderInterface;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use GuzzleHttp\ClientInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class RemoteTaxServiceBase extends TaxServiceBase implements RemoteTaxServiceInterface {
@@ -17,8 +17,8 @@ abstract class RemoteTaxServiceBase extends TaxServiceBase implements RemoteTaxS
    */
   protected $httpClient;
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RounderInterface $rounder, ClientInterface $client) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $rounder);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RounderInterface $rounder, LoggerInterface $logger, ClientInterface $client) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $rounder, $logger);
 
     $this->httpClient = $client;
   }
@@ -29,7 +29,8 @@ abstract class RemoteTaxServiceBase extends TaxServiceBase implements RemoteTaxS
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     /** @var RounderInterface $rounder */
     $rounder = $container->get('commerce_price.rounder');
-
+    /** @var LoggerInterface $logger */
+    $logger = $container->get('logger.channel.commerce_tax_service');
     /** @var ClientInterface $client */
     $client = $container->get('http_client');
 
@@ -38,6 +39,7 @@ abstract class RemoteTaxServiceBase extends TaxServiceBase implements RemoteTaxS
       $plugin_id,
       $plugin_definition,
       $rounder,
+      $logger,
       $client
     );
   }
@@ -48,6 +50,7 @@ abstract class RemoteTaxServiceBase extends TaxServiceBase implements RemoteTaxS
   public function defaultConfiguration() {
     return [
         'mode' => 'test',
+        'log' => [],
       ] + parent::defaultConfiguration();
   }
 
@@ -67,6 +70,16 @@ abstract class RemoteTaxServiceBase extends TaxServiceBase implements RemoteTaxS
         'test' => $this->t('Test'),
         'live' => $this->t('Live'),
       ],
+    ];
+
+    $form['log'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Log the following messages for debugging'),
+      '#options' => [
+        'request' => $this->t('API request messages'),
+        'response' => $this->t('API response messages'),
+      ],
+      '#default_value' => $this->configuration['log'],
     ];
 
     return $form;
@@ -90,6 +103,7 @@ abstract class RemoteTaxServiceBase extends TaxServiceBase implements RemoteTaxS
     $values = $form_state->getValue($form['#parents']);
 
     $this->configuration['mode'] = $values['mode'];
+    $this->configuration['log'] = $values['log'];
 
     parent::submitConfigurationForm($form, $form_state);
   }

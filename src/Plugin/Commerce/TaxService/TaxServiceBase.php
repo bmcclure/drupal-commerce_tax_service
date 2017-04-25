@@ -8,8 +8,8 @@ use Drupal\commerce_price\Price;
 use Drupal\commerce_price\RounderInterface;
 use Drupal\Core\Executable\ExecutablePluginBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -27,6 +27,13 @@ abstract class TaxServiceBase extends ExecutablePluginBase implements TaxService
   protected $rounder;
 
   /**
+   * Commerce Fedex Logger Channel.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a new TaxServiceBase object.
    *
    * @param array $configuration
@@ -37,12 +44,15 @@ abstract class TaxServiceBase extends ExecutablePluginBase implements TaxService
    *   The plugin implementation definition.
    * @param \Drupal\commerce_price\RounderInterface $rounder
    *   The rounder.
+   * @param LoggerInterface $logger
+   *   The logger.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RounderInterface $rounder) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RounderInterface $rounder, LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->setConfiguration($configuration);
     $this->rounder = $rounder;
+    $this->logger = $logger;
   }
 
   /**
@@ -51,12 +61,15 @@ abstract class TaxServiceBase extends ExecutablePluginBase implements TaxService
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     /** @var RounderInterface $rounder */
     $rounder = $container->get('commerce_price.rounder');
+    /** @var LoggerInterface $logger */
+    $logger = $container->get('logger.channel.commerce_tax_service');
 
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $rounder
+      $rounder,
+      $logger
     );
   }
 

@@ -17,3 +17,7 @@ services:
     class: Drupal\commerce_tax_service\EventSubscriber\TaxServiceSubscriber
     tags:
       - {name: event_subscriber}
+
+  logger.channel.commerce_tax_service:
+    parent: logger.channel_base
+    arguments: ['commerce_tax_service']
